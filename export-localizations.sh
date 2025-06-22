@@ -1,6 +1,7 @@
 #!/bin/bash
 
-DEST_DIR="localizations"
+ROOT_DIR=".."
+SRC_DIR="."
 DRY_RUN=false
 
 # Check for dry-run flag
@@ -9,34 +10,34 @@ if [[ "$1" == "--dry-run" ]]; then
   echo "[Dry Run] No files will be copied."
 fi
 
-# Ensure the destination directory exists
-mkdir -p "$DEST_DIR"
+# Exit if localizations directory doesn't exist
+if [ ! -d "$SRC_DIR" ]; then
+  echo "Error: Source directory '$SRC_DIR' does not exist."
+  exit 1
+fi
 
-# Find and process .po files outside the localizations directory
-find . -type d -name "$DEST_DIR" -prune -o -type f -name "*.po" -print | while read -r file; do
-  # Get relative path without leading ./
-  relative_path="${file#./}"
+# Find all .po files inside the localizations directory
+find "$SRC_DIR" -type f -name "*.po" | while read -r file; do
+  # Get relative path (strip the leading "localizations/")
+  relative_path="${file#$SRC_DIR/}"
 
-  # Extract the directory part
-  dir_path=$(dirname "$relative_path")
-
-  # Create the destination directory structure
-  dest_dir_path="$DEST_DIR/$dir_path"
-  dest_file_path="$DEST_DIR/$relative_path"
+  # Determine target path
+  target_dir=$ROOT_DIR/$(dirname "$relative_path")
+  target_file="$ROOT_DIR/$relative_path"
 
   if $DRY_RUN; then
-    echo "[Dry Run] Would create directory: $dest_dir_path"
-    echo "[Dry Run] Would copy '$file' to '$dest_file_path'"
+    echo "[Dry Run] Would create directory: $target_dir"
+    echo "[Dry Run] Would copy '$file' to '$target_file'"
   else
-    mkdir -p "$dest_dir_path"
-    cp "$file" "$dest_file_path"
-    echo "Copied '$file' to '$dest_file_path'"
+    mkdir -p "$target_dir"
+    cp "$file" "$target_file"
+    echo "Copied '$file' to '$target_file'"
   fi
 done
 
 if $DRY_RUN; then
   echo "[Dry Run] Simulation complete. No files were copied."
 else
-  echo "All .po files have been copied into '$DEST_DIR' with original structure preserved."
+  echo "All .po files have been restored from '$SRC_DIR' to their original structure."
 fi
 
