@@ -16,7 +16,7 @@ LOCALIZATIONS_DIR_ABS="$(pwd)"
 cd .. || exit 1
 
 # Find .po files excluding the 'localizations' directory itself
-find . -type d -name "$(basename "$LOCALIZATIONS_DIR_ABS")" -prune -o -type f -name "*.po" -print | while read -r file; do
+find . -type d -name "$(basename "$LOCALIZATIONS_DIR_ABS")" -prune -o -type f -name "*.po" -o -type f -name "*.pot" -print | while read -r file; do
   # Strip leading './'
   relative_path="${file#./}"
 

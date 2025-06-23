@@ -17,7 +17,7 @@ if [ ! -d "$SRC_DIR" ]; then
 fi
 
 # Find all .po files inside the localizations directory
-find "$SRC_DIR" -type f -name "*.po" | while read -r file; do
+find "$SRC_DIR" -type f -name "*.po" -o -type f -name "*.pot" -o -type f -name "*.mo" -o -type f -name "*.php" -o -type f -name "*.json" | while read -r file; do
   # Get relative path (strip the leading "localizations/")
   relative_path="${file#$SRC_DIR/}"
 
