@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: cbatticon.c:163
-msgid "Display the version"
+msgid "Display the big version"
 msgstr ""
 
 #: cbatticon.c:164
